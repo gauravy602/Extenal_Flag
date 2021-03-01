@@ -1,6 +1,7 @@
 package com.khushi.demo.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,49 +21,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.khushi.demo.dao.AlienRepo;
 import com.khushi.demo.model.Alien;
+import com.khushi.demo.resources.resources;
 
 @PropertySource("info.properties")
-
 @RestController
 public class AlienController {
 	@Value("${flag}")
 	int flag;
 	
 	@Autowired
-	AlienRepo repo;
+	private AlienRepo repo;
+	
+	@Autowired
+	private resources r;
+	
+	
 	
 	@PostMapping("/alien")
-	public Alien home(Alien alien) {
-		repo.save(alien);
-		return alien;
+	public String addProduct(Alien alien) {
+		return r.addProduct(alien);
 	}
 	
 	@GetMapping("/aliens")
-	public String getAliens() {
-		return  repo.findAll().toString();
+	public String getProduct() {
+		return r.getAllAliens();
 	}
-	Map <Optional<Alien>,String> hm = new HashMap<Optional<Alien>,String>();
 	@GetMapping("/alien/{aid}")
-	public Map <Optional<Alien>,String> getAlien(@PathVariable("aid") Integer aid){
-		if(flag ==0) {
-			    hm.put(repo.findById(-1),"Access Denied");
-		}
-	     else{
-				hm.put(repo.findById(aid),"Success");
-		}
-		return hm;
-		}
-	@DeleteMapping("/alien/{aid}")
-	public String delAlien(@PathVariable("aid") Integer aid) {
-		Alien a = repo.getOne(aid);
-		repo.delete(a);
-		return "Success";
+	public Optional<Alien> getAlien(@PathVariable("aid") Integer aid){
+		return repo.findById(aid);
 	}
 	
-	@PutMapping(path ="/alien/")
-	public Alien put(Alien alien) {
-		repo.save(alien);
-		return alien;
+
+	@DeleteMapping("/alien/{aid}")
+	public String delAlien(@PathVariable("aid") Integer aid) {
+		return r.delProduct(aid);
+	}
+	
+	@GetMapping("alien/smallname")
+	public List<Alien> smallName() {
+	return repo.getAlienByLength();	
 	}
 	
 	

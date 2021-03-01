@@ -25,6 +25,4 @@ public class Alien {
 	public String toString() {
 		return "Alien [aid=" + aid + ", aname=" + aname + "]";
 	}
-	
-
 }
